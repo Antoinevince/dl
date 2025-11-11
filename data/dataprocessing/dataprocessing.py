@@ -25,10 +25,11 @@ def json_to_txt(jsonfilepath):
 
 
 
-def parquet_to_txt():
+
+def parquet_to_txt(path):
     
     # Lire le fichier Parquet
-    df = pd.read_parquet('/Users/dossierantoine/Desktop/dl/transformer/ia génération de texte/gpt project/data/datainstruct/train-00000-of-00001-844fbb78a655163e.parquet')
+    df = pd.read_parquet(path)
 
     # Sélectionner la colonne spécifique
     nom_colonne = 'text'  # Remplacez par le nom de votre colonne
@@ -44,12 +45,14 @@ def parquet_to_txt():
 
 
 
-def get_batches_parquet():
+
+
+def get_batches_parquet(path):
     
 
     # Step 1: Read the Parquet file
-    file_path = 'train-00000-of-00001-494661a0baeb14c0.parquet'
-    df = pd.read_parquet(file_path)
+    
+    df = pd.read_parquet(path)
 
     # Step 2: Limit the DataFrame to the first 10,000 rows
     df = df.head(20000)
@@ -81,10 +84,10 @@ def get_batches_parquet():
 
 
 
-def truncate_txt():
+def truncate_txt(path):
     length = 20000000000
 
-    with open('histoiresfr.txt', "r+") as file:
+    with open(path, "r+") as file:
         content = file.readlines()
         compteur = 0
         new_file = ""
@@ -108,14 +111,12 @@ def parquet_to_json(filepath):
     # Convert the DataFrame to JSON
     json_data = df.to_json(orient='records', indent=4)
 
-
-    
-
     # Save the JSON data to a file
-    with open('train_0_out_of_7_instructions.json', 'w') as json_file:
+    with open(filepath, 'w') as json_file:
         json_file.write(json_data)
 
     print("The Parquet file has been converted to JSON and saved as output.json")
+
 
 
 
@@ -167,6 +168,8 @@ def read_json(filepath):
 
 
 
+
+
 def jsonl_to_json(jsonl_file_path):
 
         # Liste pour stocker les objets JSON
@@ -184,6 +187,10 @@ def jsonl_to_json(jsonl_file_path):
     # Écrire la liste des objets dans un fichier JSON
     with open(json_file_path, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)
+
+
+
+
 
 
 def truncate_text(filepath, id_truncation):
@@ -273,4 +280,3 @@ def jsoncleaning(file_path, file_path2):
     with open(file_path2, "w") as file2:
         json.dump(data2, file2, indent=4)
 
-parquet_to_json('/Users/dossierantoine/Desktop/dl/transformer/ia génération de texte/gpt project/data/datainstruct/train_0_out_of_7_instructions.parquet')
