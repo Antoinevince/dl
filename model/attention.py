@@ -102,3 +102,5 @@ def cross_attention(Q, K, V, mask=None):
     return output, attention_weights
 
 
+class CustomAttention():
+    pass
