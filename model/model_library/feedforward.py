@@ -1,14 +1,12 @@
-import torch
-import torch.nn
+import model.mathfunction as mathfunction
 
 
-class FeedForwardNeuralNetwork(torch.nn.Module):
+class FeedForwardNeuralNetwork():
 
     def __init__(self):
-        super(FeedForwardNeuralNetwork,self).__init__()
-        self.l1 = torch.nn.Linear()
-        self.l2 = torch.nn.Linear()
-        self.relu = torch.nn.ReLU()
-    
-    def linear(self):
-        pass 
+        pass
+        
+    def perceptron(self, vector):
+        pass
+
+
