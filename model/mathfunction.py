@@ -2,8 +2,26 @@ import torch
 import torch.nn
 
 
-class Relu():
+def Relu():
     pass
 
-class sigmoid():
+def sigmoid():
     pass
+
+
+
+
+
+
+
+def normalizationlayer(vecteur):
+
+    mean = torch.mean(vecteur)
+
+    var = torch.var(vecteur, unbiased= True)
+
+    sigma = torch.std(vecteur, unbiased = True)
+
+    pass
+
+
