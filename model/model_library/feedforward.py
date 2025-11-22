@@ -18,7 +18,7 @@ class MultiLayerPerceptron():
 
 
         
-    def input_neuron(self, input_values, id):
+    def neuron(self, input_values, id):
         """single neuron implemented"""
 
         sum = input_values[id]*self.input_weights[id] + self.input_biases[id]
