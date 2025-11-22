@@ -1,4 +1,5 @@
 import model.mathfunction as mathfunction
+import math
 
 
 class MultiLayerPerceptron():
@@ -6,13 +7,12 @@ class MultiLayerPerceptron():
     def __init__(self):
         pass
         
-    def neuron(self, inputs):
+    def input_neuron(self, input_values, activation_function):
         """single neuron implemented"""
+        pass
 
 
+        
 
-        input_sum = 0
-        for k in inputs:
-            input_sum+=k
 
 
