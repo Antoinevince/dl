@@ -1,4 +1,4 @@
-import model.mathfunction as mathfunction
+from mathfunction import functions
 import math
 
 
@@ -22,7 +22,7 @@ class MultiLayerPerceptron():
         """single neuron implemented"""
 
         sum = input_values[id]*self.input_weights[id] + self.input_biases[id]
-        new_value = mathfunction.Relu(sum)
+        new_value = functions.Relu(sum)
 
         return new_value
     

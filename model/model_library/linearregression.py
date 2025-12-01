@@ -1,12 +1,16 @@
 import math
-import mathfunction
+import os
 
+
+from mathfunction import functions
 
 class singleperceptron():
-    def __init__(self, input):
+    def __init__(self, input, weights):
         self.input = input
+        self.weights = weights 
 
-    def train(self, data, loss_function, pas):
+    def train(self, loss_function, pas):
+        data = self.input
         while ecart>=0:
             
             #initialisation des pentes des différents paramètres
@@ -42,4 +46,9 @@ class singleperceptron():
         return (a, b, c)
 
     def neuron(self):
-        pass
+        return 
+
+
+data = [(1, 1.01), (2, 2.004), (3, 3), (4, 5.26)]
+neuron = singleperceptron(data, 0)
+print(neuron.train(functions.quandratic_loss, 0.1))
