@@ -43,3 +43,5 @@ def knn_local(l, k, x):
         etiquettedict[j[0]] += 1
 
    return max(etiquettedict)
+
+

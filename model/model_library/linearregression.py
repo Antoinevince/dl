@@ -1,59 +1,31 @@
 import math
 import os
 import sys
+import numpy
 sys.path.append("")
 
 from mathfunction import functions
 
 class singleperceptron():
     def __init__(self, input, weights, bias):
+        """
+        input: set of two real numbers
+        wheights = real number
+        bias: real number
+        """
+
         self.input = input
         self.weights = weights 
         self.bias = bias
 
     def train(self, loss_function, pas):
+        """
+        pas = real number
+        loss_function = function from mathfunction.py
+        """
         data = self.input
         ecart = pas
         
-        while ecart>=0:
-            
-            #initialisation des pentes des différents paramètres
-            weight_slope = 0
-            bias_slope = 0
-            
-            #calcul des dérivées partielles
-            for k in range(len(data[0])):
-                weight_slope += (self.weights*data[0][k] - data[1][k])*2*data[0][k]
-                bias_slope += (self.weights*data[0][k] - data[1][k])*2
-            
-            #pondération des pentes
-            weight_slope = weight_slope/len(data[0])
-            bias_slope = bias_slope/len(data[0])
-            
-            #ajustement des coefficients
-            self.weights -= weight_slope*pas
-            self.bias -= bias_slope*pas
-        
-            c = loss_function()
-            old_c = c
-            
-            #ajustement du pas
-            pas = pas/10
-            
-            #calcul de la fonction de perte
-            for l in range(len(data[1])):
-                c+= (self.weights*data[0][l] + self.bias)**2
-                
-            c = c/(len(data[0]))
-            
-            ecart = old_c - c
-            
-        return (self.weights, self.bias, c)
+    def outupt(self):
+        return self.input*self.weights + self.bias
 
-    def neuron(self):
-        return 
-
-
-data = [(1, 1.01), (2, 2.004), (3, 3), (4, 5.26)]
-neuron = singleperceptron(data, 1, 1)
-print(neuron.train(functions.quandratic_loss, 0.1))

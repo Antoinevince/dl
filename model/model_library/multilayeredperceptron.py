@@ -1,6 +1,7 @@
-from mathfunction import functions
 import math
-
+import sys
+sys.path.append("")
+from mathfunction import functions
 
 class MultiLayerPerceptron():
 
