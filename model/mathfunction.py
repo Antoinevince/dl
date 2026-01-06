@@ -1,29 +1,27 @@
 import math
 
-class functions():
-    def __init__(self):
-        pass
     
-    def Relu(x):
+#from here: activation functions
+def Relu(x):
         """
         x: a random real number
         """
         return 0.5*(x+abs(x))
 
-    def logistic(x):
+def logistic(x):
         """
         x: a random real number
         """
         denom = (1+ math.exp(x))**(-1)
         return (math.exp(x))*denom
 
-    def gudermannian(x):
+def gudermannian(x):
         """
         x: a random real number
         """
         return 2*(math.atan(math.tanh(x/2)))
 
-    def algebraic(x, k):
+def algebraic(x, k):
         """
         x: a strictly positive real number
         k: a random real number which is the parameter of the algebraic function taking x as an argument
@@ -32,7 +30,9 @@ class functions():
         return x*denom
 
 
-    def quandratic_loss(x, t):
+#from here: loss functions
+
+def quandratic_loss(x, t):
         return (x-t)**2
     
 
