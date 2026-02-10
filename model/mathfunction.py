@@ -32,7 +32,11 @@ def algebraic(x, k):
 
 #from here: loss functions
 
-def quandratic_loss(x, t):
-        return (x-t)**2
+class two_variables_function():
+        def __init__(self):
+                pass
+
+        def quandratic_loss(x, t):
+                return (x-t)**2
     
 

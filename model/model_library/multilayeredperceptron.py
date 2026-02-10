@@ -2,31 +2,58 @@ import math
 import random
 import numpy
 import sys
+import regex
+import os
 
 import scipy
 
 
 
 
-sys.path.append("")
-from mathfunction import functions
+#sys.path.append("/Users/dossierantoine/Documents/GitHub/dl/model/mathfunction.py")
+sys.path.insert(0, os.path.abspath('model'))
+
+
+from mathfunction import two_variables_function
+from derivative import derivative_from_list_of_values
+
 
 
 class SinglePerceptron():
-    def __init__(self, weight, bias, file_directory):
+    def __init__(self, file_directory):
         """
         
         """
 
-        self.weight = weight 
-        self.bias = bias
+        #self.weight = weight 
+        #self.bias = bias
 
-        
+        self.file_dir = file_directory
+
+    #function that aims to get the bias and weights
+    def get_coefs(self):
+        with open(f"{self.file_dir}", "r") as file:
+            content = file.read()
+
+            if content == "":
+                raise ValueError
+            else:
+                #récupérer les poids cractères par caractères en faisant attention au /
+                coefs = regex.split("/", content)
+                float_coefs = []
+                for k in coefs:
+                    float_coefs.append(float(k))
+                
+                return float_coefs
+                
 
     def output(self, input):
-        return (self.weight*input +self.bias)
+        weight = self.get_coefs()[0]
+        bias = self.get_coefs()[1]
+        return (weight*input +bias)
     
     def training(self, learning_rate, number_epoch, cost_function, training_data, batch_size):
+       
         """
         learning_rate: int
         number_epoch: int
@@ -35,25 +62,51 @@ class SinglePerceptron():
         batch_size = int
         """
 
-        self.weight = random.randfloat(100)
-        self.bias = random.randfloat(100)
+        self.weight = random.random()
+        self.bias = random.random()
+
+        
+        with open(f"{self.file_dir}", "w") as creating_file:
+            creating_file.write(f"{self.weight}/{self.bias}")
+        
 
         for k in range(number_epoch):
 
-            shuffled_batch = random.shuffle(training_data)[::batch_size]
+            #shuffled_list = random.shuffle(training_data)
 
-            shuffled_batch_applied = [(k[0], self.output(k[0])) for k in shuffled_batch]
+            grad = derivative_from_list_of_values(training_data)
 
-            delta_list = [cost_function(k[0], k[1]) for k in shuffled_batch_applied]
+            new_weights = self.weight
+            new_bias = self.bias
 
-            grad = numpy.gradient(delta_list)
-
-            self.weight -= grad
-            self.bias -= grad
-
-        return self.weight, self.bias
+            new_weights -= grad
+            new_bias -= grad
 
         
+
+        print(self.weight, self.bias)
+
+#writing the weights and bias in a file
+        with open(f"{self.file_dir}", "w") as file:
+            char = f"{str(self.weight)}/{str(self.bias)}"
+            file.write(char)
+
+
+        return self.weight, self.bias
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
 
 class MultiLayerPerceptron(SinglePerceptron):
 
@@ -75,4 +128,8 @@ class MultiLayerPerceptron(SinglePerceptron):
         
 
 
+#linear regression to test the SinglePerceptron class
+linear_regression = SinglePerceptron("weights_and_bias.txt")
+input_data = [(1, 20, 40), (1.5, 30, 60)]
 
+linear_regression.training(input_data, 7000, two_variables_function.quandratic_loss, input_data, 3)
