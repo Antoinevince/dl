@@ -4,9 +4,10 @@ import numpy
 import sys
 import regex
 import os
-
 import scipy
 
+
+import activation_functions
 
 
 
@@ -14,122 +15,62 @@ import scipy
 sys.path.insert(0, os.path.abspath('model'))
 
 
-from mathfunction import two_variables_function
-from derivative import derivative_from_list_of_values
+class FeedForwardNeuralNetwork():
 
-
-
-class SinglePerceptron():
-    def __init__(self, file_directory):
+    def __init__(self, list_depth_layer, inner_layers, hidden_layers_depth, outter_layers, activation_function):
         """
+        list_depth_layer : int list -> list containing the depth of each layer
+
+        inner_layers = int 
+
+        number_hidden_layers = int
+
+        hidden_layers =int list 2-uplet list list -> it is a list containing, for each layer, a list containg a 2-uplet of int lists respectively for weights and biases of each neuron
+
+        outter_layers: int
+        """
+        self.list_depth_layer = list_depth_layer
         
+        self.inner_layers = inner_layers
+
+        self.hidden_layers_depth = hidden_layers_depth
+
+        self.outter_layers = outter_layers
+
+        self.activation_function = activation_function
+
+
+#take all the outputs of a layer and combine them into a column vector
+    def assemble(self, id_layer, input_data, list_weights, list_bias):
+        total_vector = []
+        for k in range(len(self.list_depth_layer[id_layer])):
+            total_vector.append(self.feedforward_singlelayer(id_layer, input_data, list_weights, list_bias))
+        return total_vector
+
+
+
+    def feedforward_singlelayer(self, id_layer, input_data, list_weights, list_bias):
+        #list_weights, list_bias are temporary structures
         """
-
-        #self.weight = weight 
-        #self.bias = bias
-
-        self.file_dir = file_directory
-
-    #function that aims to get the bias and weights
-    def get_coefs(self):
-        with open(f"{self.file_dir}", "r") as file:
-            content = file.read()
-
-            if content == "":
-                raise ValueError
-            else:
-                #récupérer les poids cractères par caractères en faisant attention au /
-                coefs = regex.split("/", content)
-                float_coefs = []
-                for k in coefs:
-                    float_coefs.append(float(k))
-                
-                return float_coefs
-                
-
-    def output(self, input):
-        weight = self.get_coefs()[0]
-        bias = self.get_coefs()[1]
-        return (weight*input +bias)
+        nb_layer : the number of this layer in the list of the hidden layers
+        input_data : int vect (it is a column vector whose size is equal to hidden_layers_depth)
+        """
+        #creating a column vector of size hidden_layers_depth
+        output = [0 for k in range(self.list_depth_layer[id_layer])]
+        result = 0
     
-    def training(self, learning_rate, number_epoch, cost_function, training_data, batch_size):
-       
-        """
-        learning_rate: int
-        number_epoch: int
-        cost_function = function from mathfunctions
-        training_data: int 2-tuple list 
-        batch_size = int
-        """
+        for k in range(self.list_depth_layer[id_layer]):
+            result += list_weights[k]*input_data[k] + list_bias[k]
 
-        self.weight = random.random()
-        self.bias = random.random()
-
-        
-        with open(f"{self.file_dir}", "w") as creating_file:
-            creating_file.write(f"{self.weight}/{self.bias}")
-        
-
-        for k in range(number_epoch):
-
-            #shuffled_list = random.shuffle(training_data)
-
-            grad = derivative_from_list_of_values(training_data)
-
-            new_weights = self.weight
-            new_bias = self.bias
-
-            new_weights -= grad
-            new_bias -= grad
-
-        
-
-        print(self.weight, self.bias)
-
-#writing the weights and bias in a file
-        with open(f"{self.file_dir}", "w") as file:
-            char = f"{str(self.weight)}/{str(self.bias)}"
-            file.write(char)
-
-
-        return self.weight, self.bias
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-class MultiLayerPerceptron(SinglePerceptron):
-
-    def __init__(self, layers):
-        """
-        layers = int list
-        """
-
-        
-        self.layers = layers
+        return result
         
     
+    def apply_activation_function(self, id_layer, input_data, list_weights, list_bias):
 
-        
+        result = 0
+        for k in self.assemble(self, id_layer, input_data, list_weights, list_bias):
+            result += k
+        return self.activation_function(result)
 
-      
-
-
-        
-
-
-#linear regression to test the SinglePerceptron class
-linear_regression = SinglePerceptron("weights_and_bias.txt")
-input_data = [(1, 20, 40), (1.5, 30, 60)]
-
-linear_regression.training(input_data, 7000, two_variables_function.quandratic_loss, input_data, 3)
+    def feedforward(self):
+        pass
