@@ -48,7 +48,6 @@ class FeedForwardNeuralNetwork():
         return total_vector
 
 
-
     def feedforward_singlelayer(self, id_layer, input_data, list_weights, list_bias):
         #list_weights, list_bias are temporary structures
         """
@@ -72,5 +71,18 @@ class FeedForwardNeuralNetwork():
             result += k
         return self.activation_function(result)
 
-    def feedforward(self):
+
+   #""" def distribute(self, input, id_layer):
+       # for k in range(len(self.list_depth_layer[id_layer])):
+            #pass"""
+
+    def feedforward(self, initial_data, total_list_weights, total_list_bias):
+        
+        
+        for k in range(1, self.inner_layers+2):
+            data = self.apply_activation_function(1, initial_data, total_list_weights[k], total_list_bias[k])
+
+        return data
+
+    def sgd():
         pass
