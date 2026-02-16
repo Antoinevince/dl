@@ -6,13 +6,15 @@ import regex
 import os
 import scipy
 
-
-import activation_functions
-
-
-
 #sys.path.append("/Users/dossierantoine/Documents/GitHub/dl/model/mathfunction.py")
 sys.path.insert(0, os.path.abspath('model'))
+
+
+import activation_functions
+import cost_functions
+
+
+
 
 
 class FeedForwardNeuralNetwork():
@@ -84,5 +86,31 @@ class FeedForwardNeuralNetwork():
 
         return data
 
-    def sgd():
-        pass
+    def sgd(self, training_data, epoch, learning_rate, cost_function):
+        
+        """
+        training_data : int list list
+        """
+
+        #temporarily set to 0
+        total_neuron_number = 0
+        for k in self.list_depth_layer:
+            total_neuron_number += k
+
+        random_weights = [random.random() for k in range(total_neuron_number)]
+        random_biases = [random.random() for k in range(total_neuron_number)]
+
+        random.shuffle(training_data[0]), random.shuffle(training_data[1])
+
+        for k in range(epoch):
+            
+            error_vect = [((training_data[0][k] - self.feedforward(training_data[1]), random_weights, random_biases)[k]) for k in range(len(training_data))]
+            error_dradient = numpy.gradient(error_vect)
+
+            for k in range(len(random_weights)):
+                random_weights[k] -= learning_rate*error_dradient
+                random_biases[k] -= learning_rate*error_dradient
+
+        return (random_weights, random_biases)
+
+
