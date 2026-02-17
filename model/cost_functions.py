@@ -1,2 +1,2 @@
-def quadratic_loss(x, t):
-    return (x-t)**2
+def quadratic_loss(x, t, n):
+    return ((x-t)**2)/n

@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath('model'))
 
 import activation_functions
 import cost_functions
+import derivative
 
 
 
@@ -19,7 +20,7 @@ import cost_functions
 
 class FeedForwardNeuralNetwork():
 
-    def __init__(self, list_depth_layer, inner_layers, hidden_layers_depth, outter_layers, activation_function):
+    def __init__(self, list_depth_layer, activation_function):
         """
         list_depth_layer : int list -> list containing the depth of each layer
 
@@ -32,12 +33,6 @@ class FeedForwardNeuralNetwork():
         outter_layers: int
         """
         self.list_depth_layer = list_depth_layer
-        
-        self.inner_layers = inner_layers
-
-        self.hidden_layers_depth = hidden_layers_depth
-
-        self.outter_layers = outter_layers
 
         self.activation_function = activation_function
 
@@ -69,7 +64,7 @@ class FeedForwardNeuralNetwork():
     def apply_activation_function(self, id_layer, input_data, list_weights, list_bias):
 
         result = 0
-        for k in self.assemble(self, id_layer, input_data, list_weights, list_bias):
+        for k in self.assemble(id_layer, input_data, list_weights, list_bias):
             result += k
         return self.activation_function(result)
 
@@ -79,12 +74,22 @@ class FeedForwardNeuralNetwork():
             #pass"""
 
     def feedforward(self, initial_data, total_list_weights, total_list_bias):
+
+        data = initial_data
         
-        
-        for k in range(1, self.inner_layers+2):
+        for k in range(self.total_neuron_number()-1):
             data = self.apply_activation_function(1, initial_data, total_list_weights[k], total_list_bias[k])
 
         return data
+    
+
+    def total_neuron_number(self):
+        
+        total_neuron_number = 0
+        for k in self.list_depth_layer:
+            total_neuron_number += k
+        return total_neuron_number
+
 
     def sgd(self, training_data, epoch, learning_rate, cost_function):
         
@@ -93,24 +98,31 @@ class FeedForwardNeuralNetwork():
         """
 
         #temporarily set to 0
-        total_neuron_number = 0
-        for k in self.list_depth_layer:
-            total_neuron_number += k
+        total_neuron_number = self.total_neuron_number()
 
         random_weights = [random.random() for k in range(total_neuron_number)]
         random_biases = [random.random() for k in range(total_neuron_number)]
 
-        random.shuffle(training_data[0]), random.shuffle(training_data[1])
+        
 
         for k in range(epoch):
+            random.shuffle(training_data[0]), random.shuffle(training_data[1])
             
-            error_vect = [((training_data[0][k] - self.feedforward(training_data[1]), random_weights, random_biases)[k]) for k in range(len(training_data))]
-            error_dradient = numpy.gradient(error_vect)
+            error_vect = [cost_function(training_data[0][k], self.feedforward(training_data[1], random_weights, random_biases)[k], len(training_data)) for k in range(len(training_data))]
+            error_value = 0
+
+            
+            error_gradient = numpy.gradient(error_vect)
+            print(error_gradient)
 
             for k in range(len(random_weights)):
-                random_weights[k] -= learning_rate*error_dradient
-                random_biases[k] -= learning_rate*error_dradient
+                random_weights[k] -= learning_rate*error_gradient
+                random_biases[k] -= learning_rate*error_gradient
 
         return (random_weights, random_biases)
+    
+    
 
 
+ffn_example = FeedForwardNeuralNetwork([1], activation_functions.identity)
+print(ffn_example.sgd([[1, 2, 3, 5, 6], [3, 6.05, 9.83, 16, 19.47]], 50000, 0.001, cost_functions.quadratic_loss))
